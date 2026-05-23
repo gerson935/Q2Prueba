@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis: Trade Credit Risk Assessment — Liao, Jiao & Zhang (2025)</title>
+<style>
+  /* ===================== RESET & BASE ===================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-dark:      #0d1117;
+    --bg-card:      #161b22;
+    --bg-card2:     #1c2330;
+    --border:       #30363d;
+    --text:         #c9d1d9;
+    --text-muted:   #8b949e;
+    --accent:       #58a6ff;
+    --accent2:      #3fb950;
+    --accent3:      #f78166;
+    --accent4:      #d2a8ff;
+    --accent5:      #ffa657;
+    --highlight:    rgba(88,166,255,0.12);
+    --highlight2:   rgba(63,185,80,0.12);
+    --table-head:   #21262d;
+    /* Marketing section */
+    --mkt-bg:       #f0f4f8;
+    --mkt-card:     #ffffff;
+    --mkt-accent:   #1a56db;
+    --mkt-accent2:  #057a55;
+    --mkt-accent3:  #c81e1e;
+    --mkt-text:     #1f2937;
+    --mkt-muted:    #6b7280;
+    --mkt-border:   #e5e7eb;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ===================== STICKY NAV ===================== */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,17,23,0.97);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav .nav-brand {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 14px 20px 14px 0;
+    border-right: 1px solid var(--border);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 14px 12px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  nav a:hover { color: var(--accent); }
+
+  /* ===================== LAYOUT ===================== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  section { padding-top: 40px; }
+
+  h1 { font-size: 28px; color: #ffffff; font-weight: 700; line-height: 1.3; }
+  h2 { font-size: 22px; color: var(--accent); font-weight: 700; margin: 40px 0 20px; border-left: 4px solid var(--accent); padding-left: 14px; }
+  h3 { font-size: 17px; color: var(--accent4); font-weight: 600; margin: 28px 0 12px; }
+  h4 { font-size: 15px; color: var(--accent5); font-weight: 600; margin: 20px 0 8px; }
+  p  { margin-bottom: 12px; color: var(--text); }
+
+  /* ===================== HEADER SECTION ===================== */
+  .paper-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1c2330 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin: 32px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .paper-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .paper-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    max-width: 800px;
+  }
+  .paper-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .meta-item {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .meta-item strong { color: var(--text); }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-blue  { background: rgba(88,166,255,0.15); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); }
+  .badge-green { background: rgba(63,185,80,0.15);  color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+  .badge-purple{ background: rgba(210,168,255,0.15);color: #d2a8ff; border: 1px solid rgba(210,168,255,0.3); }
+  .badge-orange{ background: rgba(255,166,87,0.15); color: #ffa657; border: 1px solid rgba(255,166,87,0.3); }
+
+  /* ===================== CARDS ===================== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .card-sm {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .card-sm .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .card-sm .value { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .card-sm .sub   { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ===================== TABLES ===================== */
+  .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: 8px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    background: var(--table-head);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid rgba(48,54,61,0.5); color: var(--text); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--highlight); }
+  tbody tr.highlight-row { background: rgba(63,185,80,0.08); }
+  tbody tr.highlight-row td { color: #3fb950; font-weight: 600; }
+  tbody tr.selected-model { background: rgba(88,166,255,0.08); border-left: 3px solid var(--accent); }
+  tbody tr.selected-model td { color: var(--accent); font-weight: 600; }
+  .best-val { color: #3fb950; font-weight: 700; }
+  .rank-1 { color: #ffa657; font-weight: 700; }
+
+  /* ===================== FORMULA BOX ===================== */
+  .formula-box {
+    background: #0a0e13;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent4);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--accent4);
+    line-height: 2;
+  }
+  .formula-box .formula-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* ===================== FRAMEWORK DIAGRAM ===================== */
+  .diagram {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .diagram-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .d-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    min-width: 110px;
+  }
+  .d-box.stage1 { border-color: var(--accent);  color: var(--accent);  background: rgba(88,166,255,0.08); }
+  .d-box.stage2 { border-color: var(--accent2); color: var(--accent2); background: rgba(63,185,80,0.08); }
+  .d-box.stage3 { border-color: var(--accent4); color: var(--accent4); background: rgba(210,168,255,0.08); }
+  .d-box.stage4 { border-color: var(--accent5); color: var(--accent5); background: rgba(255,166,87,0.08); }
+  .d-arrow { color: var(--text-muted); font-size: 18px; flex-shrink: 0; }
+  .d-section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .d-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 16px 0;
+  }
+
+  /* ===================== INSIGHT BOX ===================== */
+  .insight {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .insight.blue   { background: rgba(88,166,255,0.08);  border: 1px solid rgba(88,166,255,0.25); }
+  .insight.green  { background: rgba(63,185,80,0.08);   border: 1px solid rgba(63,185,80,0.25); }
+  .insight.orange { background: rgba(255,166,87,0.08);  border: 1px solid rgba(255,166,87,0.25); }
+  .insight.red    { background: rgba(247,129,102,0.08); border: 1px solid rgba(247,129,102,0.25); }
+  .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .insight-text { font-size: 14px; color: var(--text); }
+  .insight-text strong { color: #fff; }
+
+  /* ===================== GAP LIST ===================== */
+  .gap-list { list-style: none; padding: 0; }
+  .gap-list li {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .gap-list li .gap-num {
+    display: inline-block;
+    background: var(--accent3);
+    color: #0d1117;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+  /* ===================== SIDE-BY-SIDE ===================== */
+  .side-by-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 768px) {
+    .side-by-side { grid-template-columns: 1fr; }
+    nav a { font-size: 12px; padding: 12px 8px; }
+  }
+  .sbs-card {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .sbs-card h4 { color: var(--accent); margin-top: 0; }
+
+  /* ===================== PROGRESS BARS ===================== */
+  .feat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .feat-name { font-size: 12px; color: var(--text-muted); width: 160px; flex-shrink: 0; text-align: right; }
+  .feat-bar-wrap { flex: 1; background: var(--bg-card2); border-radius: 3px; height: 16px; overflow: hidden; border: 1px solid var(--border); }
+  .feat-bar { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .feat-val { font-size: 12px; color: var(--text); width: 70px; flex-shrink: 0; }
+
+  /* ===================== SECTION DIVIDER ===================== */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0 0;
+  }
+
+  /* ===================== MARKETING SECTION ===================== */
+  .mkt-section {
+    background: var(--mkt-bg);
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 60px;
+    color: var(--mkt-text);
+    border: 2px solid var(--mkt-border);
+  }
+  .mkt-section h2 {
+    color: var(--mkt-accent);
+    border-left-color: var(--mkt-accent);
+    font-size: 20px;
+  }
+  .mkt-section h3 {
+    color: var(--mkt-text);
+    font-size: 16px;
+    margin-top: 24px;
+  }
+  .mkt-section p { color: var(--mkt-text); font-size: 15px; }
+  .mkt-header {
+    background: linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+  .mkt-header h1 { color: white; font-size: 22px; }
+  .mkt-header p  { color: rgba(255,255,255,0.85); font-size: 14px; margin-top: 8px; }
+  .mkt-card {
+    background: var(--mkt-card);
+    border: 1px solid var(--mkt-border);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .mkt-card .q-num {
+    display: inline-block;
+    background: var(--mkt-accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .mkt-card h3 { color: var(--mkt-accent); margin-top: 6px; margin-bottom: 10px; font-size: 15px; }
+  .mkt-card p { color: var(--mkt-text); font-size: 14px; margin-bottom: 6px; }
+  .analogy-box {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #78350f;
+    margin-top: 10px;
+  }
+  .analogy-box strong { color: #92400e; }
+  .mkt-stat-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .mkt-stat {
+    background: var(--mkt-bg);
+    border: 1px solid var(--mkt-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+  }
+  .mkt-stat .big { font-size: 26px; font-weight: 700; color: var(--mkt-accent); }
+  .mkt-stat .sub { font-size: 12px; color: var(--mkt-muted); margin-top: 2px; }
+  .top5-list { list-style: none; padding: 0; }
+  .top5-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--mkt-border);
+    font-size: 14px;
+    color: var(--mkt-text);
+  }
+  .top5-list li:last-child { border-bottom: none; }
+  .top5-list li .rank-badge {
+    background: var(--mkt-accent);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .limit-list { list-style: none; padding: 0; }
+  .limit-list li {
+    padding: 10px 14px 10px 10px;
+    margin-bottom: 8px;
+    background: #fff8f8;
+    border: 1px solid #fecaca;
+    border-left: 3px solid var(--mkt-accent3);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--mkt-text);
+  }
+
+  /* ===================== CONTRIBUTIONS ===================== */
+  .contrib-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin: 14px 0; }
+  .contrib-card {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .contrib-card .num { font-size: 28px; font-weight: 800; color: var(--accent2); opacity: 0.4; }
+  .contrib-card p { font-size: 13px; color: var(--text); margin-top: 6px; }
+
+  .limit-dark { list-style: none; padding: 0; }
+  .limit-dark li {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: rgba(247,129,102,0.07);
+    border: 1px solid rgba(247,129,102,0.25);
+    border-left: 3px solid var(--accent3);
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--text);
+  }
+
+  /* ===================== COST COMPARISON ===================== */
+  .cost-bar-wrap { margin: 8px 0; }
+  .cost-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .cost-bar-outer { background: var(--bg-card2); border-radius: 4px; height: 22px; overflow: hidden; border: 1px solid var(--border); display: flex; align-items: center; }
+  .cost-bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 700; color: #fff; }
+
+  /* ===================== TOC ===================== */
+  .toc {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 28px 0;
+    columns: 2;
+    column-gap: 32px;
+  }
+  @media (max-width: 600px) { .toc { columns: 1; } }
+  .toc h3 { column-span: all; color: var(--accent); margin-top: 0; margin-bottom: 14px; font-size: 15px; }
+  .toc a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 0;
+    transition: color 0.2s;
+    break-inside: avoid;
+  }
+  .toc a:hover { color: var(--accent); }
+  .toc a .toc-num { color: var(--accent); font-weight: 700; margin-right: 6px; font-size: 12px; }
+
+  /* ===================== SUBTITLE ===================== */
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: -12px 0 16px;
+    padding-left: 18px;
+    border-left: 2px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== STICKY NAV ===== -->
+<nav>
+  <div class="nav-brand">📄 Liao et al. 2025</div>
+  <a href="#header">Inicio</a>
+  <a href="#s1">Problema</a>
+  <a href="#s2">Framework</a>
+  <a href="#s3">Datasets</a>
+  <a href="#s4">Modelos</a>
+  <a href="#s5">SHAP+LIME</a>
+  <a href="#s6">Pesos</a>
+  <a href="#s7">Bagging</a>
+  <a href="#s8">Features</a>
+  <a href="#s9">Resultados</a>
+  <a href="#s10">Interpretabilidad</a>
+  <a href="#s11">Contribuciones</a>
+  <a href="#marketing">📊 Resumen Ejecutivo</a>
+</nav>
+
+<div class="container">
+
+<!-- ===== HEADER ===== -->
+<section id="header">
+  <div class="paper-header">
+    <div class="paper-title">Research on Trade Credit Risk Assessment for Foreign Trade Enterprises Based on Explainable Machine Learning</div>
+    <div class="paper-meta">
+      <div class="meta-item"><strong>Autores:</strong> Mengjie Liao¹, Wanying Jiao²*, Jian Zhang¹</div>
+      <div class="meta-item"><strong>Institución:</strong> Beijing Information Science & Technology Univ. / Beijing Univ. of Posts & Telecommunications</div>
+      <div class="meta-item"><strong>Revista:</strong> Information 2025, 16, 831</div>
+      <div class="meta-item"><strong>Publicado:</strong> 26 de septiembre de 2025</div>
+      <div class="meta-item"><strong>DOI:</strong> 10.3390/info16100831</div>
+      <div class="meta-item"><strong>Licencia:</strong> Open Access — CC BY 4.0</div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Estudio Empírico</span>
+      <span class="badge badge-green">Machine Learning</span>
+      <span class="badge badge-purple">Riesgo Crediticio</span>
+      <span class="badge badge-orange">XAI — Interpretabilidad</span>
+      <span class="badge badge-blue">LightGBM + Bagging</span>
+      <span class="badge badge-green">SHAP + LIME</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3>📋 Tabla de Contenidos</h3>
+    <a href="#s1"><span class="toc-num">2.1</span>Problema y Gap de Investigación</a>
+    <a href="#s2"><span class="toc-num">2.2</span>Arquitectura del Framework</a>
+    <a href="#s3"><span class="toc-num">2.3</span>Datasets</a>
+    <a href="#s4"><span class="toc-num">2.4</span>Modelos Comparados</a>
+    <a href="#s5"><span class="toc-num">2.5</span>Framework SHAP + LIME</a>
+    <a href="#s6"><span class="toc-num">2.6</span>Ajuste de Pesos (Loss Preference)</a>
+    <a href="#s7"><span class="toc-num">2.7</span>Framework Bagging + LightGBM</a>
+    <a href="#s8"><span class="toc-num">2.8</span>Feature Subset Óptimo</a>
+    <a href="#s9"><span class="toc-num">2.9</span>Resultados Comparativos Finales</a>
+    <a href="#s10"><span class="toc-num">2.10</span>Análisis de Interpretabilidad</a>
+    <a href="#s11"><span class="toc-num">2.11</span>Contribuciones y Limitaciones</a>
+    <a href="#marketing"><span class="toc-num">3</span>Resumen Ejecutivo (Marketing)</a>
+  </div>
+</section>
+
+<!-- ================================================ -->
+<!-- SECCIÓN 2: ANÁLISIS TÉCNICO                      -->
+<!-- ================================================ -->
+
+<h2>SECCIÓN 2 — Análisis Técnico para Ingenieros</h2>
+
+<!-- 2.1 PROBLEMA -->
+<section id="s1">
+  <h2>2.1 Problema y Gap de Investigación</h2>
+  <div class="section-subtitle">¿Qué problema resuelve este paper y qué vacíos académicos cubre?</div>
+
+  <div class="card">
+    <h3>Descripción del Problema</h3>
+    <p>A mediados de 2023, más de <strong>540,000 empresas</strong> estaban activas en comercio exterior en China. Los mecanismos de supervisión crediticia existentes basados en revisiones manuales e inspecciones aleatorias son intensivos en trabajo, consumen muchos recursos y con frecuencia carecen de criterios de evaluación transparentes, lo que erosiona la eficiencia regulatoria y la credibilidad del sistema.</p>
+    <p>A diferencia de las instituciones financieras tradicionales, donde el riesgo crediticio surge principalmente de la insolvencia, en las empresas de comercio exterior el riesgo se asocia con comportamientos subjetivos como <strong>declaraciones incorrectas o evasión</strong> en actividades relacionadas con el comercio. Su credibilidad no está determinada únicamente por el desempeño financiero, sino también por la estabilidad organizacional, el cumplimiento regulatorio y la capacidad de adaptación a la dinámica del comercio global.</p>
+    <div class="insight blue">
+      <div class="insight-icon">⚡</div>
+      <div class="insight-text"><strong>Consecuencia central:</strong> clasificar erróneamente a una empresa de alto riesgo como de bajo riesgo puede derivar en contrabando, evasión fiscal u otras violaciones no detectadas — consecuencias desproporcionadamente graves en comparación con el error inverso.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Los 4 Gaps Específicos que el Paper Declara Cubrir</h3>
+    <ul class="gap-list">
+      <li><span class="gap-num">1</span><strong>Campo subexplorado:</strong> La mayoría de estudios existentes se concentran en instituciones financieras y bancarias. La evaluación de riesgo crediticio para empresas de comercio exterior permanece relativamente poco explorada a pesar de su importancia práctica.</li>
+      <li><span class="gap-num">2</span><strong>Método único de interpretabilidad:</strong> Los estudios previos suelen emplear un solo método de interpretabilidad, ofreciendo perspectivas parciales. Este paper propone un framework unificado que integra SHAP (global) y LIME (local) para superar esta limitación.</li>
+      <li><span class="gap-num">3</span><strong>Costos asimétricos ignorados:</strong> La mayoría de modelos anteriores no aborda explícitamente los costos asimétricos de la mala clasificación. Ignorar empresas de alto riesgo puede ser significativamente más costoso que el error inverso, pero los modelos existentes no incorporan esta lógica en su función de pérdida.</li>
+      <li><span class="gap-num">4</span><strong>Validación limitada:</strong> Los modelos existentes se validan con datasets limitados. Este paper valida con dos datasets independientes: datos de terceros (3,005 empresas) y datos oficiales de aduanas (579,733 empresas), asegurando una evaluación empírica más completa y confiable.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 2.2 FRAMEWORK -->
+<section id="s2">
+  <h2>2.2 Arquitectura del Framework</h2>
+  <div class="section-subtitle">Flujo completo: dos etapas principales con sus componentes</div>
+
+  <div class="diagram">
+    <div class="d-section-label">ETAPA 1 — Identificación de características clave de riesgo</div>
+    <div class="diagram-row">
+      <div class="d-box stage1">Dataset de terceros</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">Preprocesamiento<br><small>Missing / SMOTE / Encoding</small></div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">Features completas</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">Entrenamiento<br>7 modelos base</div>
+    </div>
+    <div class="diagram-row" style="margin-top:6px;">
+      <div class="d-box stage1">SHAP<br><small>(importancia global)</small></div>
+      <span style="color:var(--text-muted);font-size:14px;padding:0 6px;">+</span>
+      <div class="d-box stage1">LIME<br><small>(explicación local)</small></div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">weighted_SHAP<br>weighted_LIME</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">Composite Score<br><small>C = S + L</small></div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage1">⭐ Feature Subset<br>Óptimo (13 vars)</div>
+    </div>
+
+    <hr class="d-divider">
+
+    <div class="d-section-label">ETAPA 2 — Construcción del modelo de evaluación de riesgo crediticio</div>
+    <div class="diagram-row">
+      <div class="d-box stage2">Dataset terceros<br>+ Dataset oficial</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage2">LightGBM<br>(base model)</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage2">Loss Preference<br>Weights (w₁=5w₀)</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage2">Grid Search<br>Hyperparams</div>
+    </div>
+    <div class="diagram-row" style="margin-top:6px;">
+      <div class="d-box stage2">Bagging Framework<br><small>Bootstrap + Voting</small></div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage2">Modelo Final<br>H(x) = sign(Σhₜ(x))</div>
+      <div class="d-arrow">→</div>
+      <div class="d-box stage2">Clasificación:<br>Alto / Bajo riesgo</div>
+    </div>
+    <div style="margin-top:12px; text-align:center;">
+      <span style="font-size:12px;color:var(--text-muted);">Métricas evaluadas: Accuracy · Precision · Recall · F1-Score · AUC · Costo de mala clasificación</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2.3 DATASETS -->
+<section id="s3">
+  <h2>2.3 Datasets</h2>
+  <div class="section-subtitle">Características de los dos conjuntos de datos utilizados en el estudio</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Atributo</th>
+          <th>Dataset de Terceros</th>
+          <th>Dataset Oficial (Aduanas)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Fuente</td><td>Proveedores externos de información empresarial + China Customs Credit Platform</td><td>Autoridades oficiales (confidencial)</td></tr>
+        <tr><td>Nº de muestras</td><td class="best-val">3,005 empresas</td><td class="best-val">579,733 empresas</td></tr>
+        <tr><td>Nº de features</td><td>15</td><td>23</td></tr>
+        <tr><td>Nº de clases</td><td>2 (binario)</td><td>3 (multinivel)</td></tr>
+        <tr><td>Muestras alto riesgo</td><td>656 (21.83%)</td><td>33,406</td></tr>
+        <tr><td>Muestras riesgo medio</td><td>— (no aplica)</td><td>46,327</td></tr>
+        <tr><td>Muestras bajo riesgo</td><td>2,349 (78.17%)</td><td>~500,000</td></tr>
+        <tr><td>Etiqueta alto riesgo (label)</td><td>1 = empresa deshonesta (violaciones, riesgos tributarios)</td><td>1 = alto riesgo</td></tr>
+        <tr><td>Etiqueta bajo riesgo (label)</td><td>0 = empresa altamente certificada, cumplimiento</td><td>0 = bajo riesgo</td></tr>
+        <tr><td>Preprocesamiento: valores faltantes</td><td colspan="2">Imputación con mediana general (variables continuas) + valores predeterminados claros (variables categóricas)</td></tr>
+        <tr><td>Balance de clases</td><td colspan="2">SMOTE — generación sintética de muestras minoritarias por interpolación entre vecinos más cercanos</td></tr>
+        <tr><td>Codificación categórica</td><td colspan="2">One-hot encoding (escala empresarial, provincia, categoría de industria)</td></tr>
+        <tr><td>Ingeniería de features</td><td colspan="2">Estandarización de capital (RMB, Yen, Euro); ajuste de variables de antigüedad; categorización de escala (4 niveles: grande → micro)</td></tr>
+        <tr><td>División train/test</td><td colspan="2">80% entrenamiento / 20% prueba (selección aleatoria)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight orange">
+    <div class="insight-icon">📌</div>
+    <div class="insight-text"><strong>Nota sobre las features del dataset de terceros:</strong> Incluyen capital registrado, capital suscrito, años de operación, escala empresarial, antigüedad, si tiene sitio web oficial, calificaciones de contribuyente, registros de sanciones administrativas, marcas registradas, patentes, derechos de autor de software, puntaje de innovación y tecnología, puntuación tripartita, clasificación industrial estándar nacional, y provincia.</div>
+  </div>
+</section>
+
+<!-- 2.4 MODELOS -->
+<section id="s4">
+  <h2>2.4 Modelos Comparados — Tabla Completa de Rendimiento</h2>
+  <div class="section-subtitle">Tabla 2 del paper — todos los valores exactos según el documento original</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Modelo</th>
+          <th>Accuracy</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1-Score</th>
+          <th>AUC</th>
+          <th>Seleccionado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Logistic Regression (LR)</td><td>0.865</td><td>0.671</td><td>0.794</td><td>0.727</td><td>0.920</td><td>—</td></tr>
+        <tr><td>Naive Bayes (NB)</td><td>0.671</td><td>0.406</td><td class="best-val">0.985</td><td>0.575</td><td>0.916</td><td>—</td></tr>
+        <tr><td>Decision Tree (DT)</td><td>0.918</td><td>0.774</td><td>0.904</td><td>0.834</td><td>0.963</td><td>—</td></tr>
+        <tr><td>SVM</td><td>0.679</td><td>0.412</td><td>0.978</td><td>0.580</td><td>0.917</td><td>—</td></tr>
+        <tr class="selected-model"><td>⭐ Random Forest (RF)</td><td class="best-val">0.980</td><td class="best-val">0.977</td><td>0.934</td><td class="best-val">0.955</td><td>0.971</td><td>✔ Seleccionado</td></tr>
+        <tr class="selected-model"><td>⭐ XGBoost</td><td>0.968</td><td>0.940</td><td>0.919</td><td>0.929</td><td class="best-val">0.973</td><td>✔ Seleccionado</td></tr>
+        <tr class="selected-model"><td>⭐ LightGBM</td><td>0.972</td><td>0.961</td><td>0.912</td><td>0.936</td><td class="best-val">0.973</td><td>✔ Seleccionado</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight green">
+    <div class="insight-icon">🏆</div>
+    <div class="insight-text"><strong>Criterio de selección:</strong> RF, LightGBM y XGBoost superan significativamente a los demás modelos en la mayoría de indicadores. RF tiene la mayor accuracy (0.980) y F1 (0.955); LightGBM y XGBoost empatan en AUC (0.973), demostrando robustez en la identificación de empresas de alto riesgo. Los tres modelos seleccionados se usan para el framework de interpretabilidad SHAP+LIME.</div>
+  </div>
+</section>
+
+<!-- 2.5 SHAP + LIME -->
+<section id="s5">
+  <h2>2.5 Framework de Interpretabilidad — SHAP + LIME</h2>
+  <div class="section-subtitle">Combinación de explicaciones globales y locales para identificar features críticas</div>
+
+  <div class="side-by-side">
+    <div class="sbs-card">
+      <h4>🌍 SHAP — Perspectiva Global</h4>
+      <p style="font-size:13px;color:var(--text);">Método agnóstico al modelo basado en los valores de Shapley de la teoría de juegos. La interpretabilidad global de SHAP se obtiene agregando las contribuciones de features en todas las muestras, mostrando qué factores tienen el mayor impacto general sobre las predicciones del modelo.</p>
+      <p style="font-size:13px;color:var(--text-muted);">SHAP no solo explica por qué se predice un resultado de cierta manera, sino que revela, a nivel de dataset, qué features son más importantes y si en general elevan o reducen las predicciones.</p>
+    </div>
+    <div class="sbs-card">
+      <h4>🔍 LIME — Perspectiva Local (por instancia)</h4>
+      <p style="font-size:13px;color:var(--text);">Explica predicciones individuales de modelos complejos aproximando su comportamiento localmente. Para una muestra dada, LIME crea muchas versiones ligeramente modificadas de ella y examina cómo el modelo predice sobre estas nuevas muestras.</p>
+      <p style="font-size:13px;color:var(--text-muted);">Luego construye un modelo simple y comprensible (modelo lineal o árbol de decisión), dando mayor peso a las muestras más cercanas a la original, haciendo explícito qué features tuvieron mayor influencia en esa predicción específica.</p>
+    </div>
+  </div>
+
+  <h3>Fórmulas Matemáticas del Paper</h3>
+
+  <div class="formula-box">
+    <div class="formula-label">Fórmula 1 — weighted_SHAP para cada feature</div>
+    S = Σᵢ₌₁ᵏ  φᵢ · Sᵢⁿᵒʳ
+    <br><br>
+    Donde:<br>
+    — k = número de modelos sobre los que se aplica SHAP<br>
+    — {S₁, S₂, ..., Sₖ} = valores SHAP absolutos medios por modelo<br>
+    — Sᵢ = (S¹ᵢ, S²ᵢ, ..., Sᵐᵢ) = valor SHAP absoluto medio de la feature j en el modelo i<br>
+    — Sᵢⁿᵒʳ = Sᵢ normalizado<br>
+    — φᵢ = peso basado en AUC del modelo i   (φ : {φ₁, φ₂, ..., φₖ})
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Fórmula 2 — LIME absoluto medio de la feature j en el modelo i</div>
+    Lʲᵢ = (Σₜ₌₁ᴺ |Lʲᵢₜ|) / N    donde  t = 1, 2, ..., N
+    <br><br>
+    Donde: N = número total de muestras en el test set en cada fold de validación cruzada
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Fórmula 3 — weighted_LIME para cada feature</div>
+    L = Σᵢ₌₁ᵏ  φᵢ · Lᵢⁿᵒʳ
+    <br><br>
+    Donde Lᵢⁿᵒʳ = Lᵢ normalizado; φᵢ = mismos pesos AUC de SHAP
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Fórmula 4 — Composite Score final (weighted_COMP)</div>
+    C = S + L
+    <br><br>
+    La suma del weighted_SHAP y weighted_LIME de cada feature determina su ranking final.<br>
+    A mayor C → mayor importancia relativa de la feature para la selección del subset óptimo.
+  </div>
+
+  <!-- TABLA 3 — SHAP -->
+  <h3>Tabla 3 — Ranking de Features por SHAP (valores exactos del paper)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Feature</th>
+          <th>XGBoost SHAP</th>
+          <th>Feature</th>
+          <th>LightGBM SHAP</th>
+          <th>Feature</th>
+          <th>RF SHAP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="rank-1">1</td><td>Registered capital</td><td class="rank-1">1.514141</td><td>Registered capital</td><td class="rank-1">2.133715</td><td>Registered capital</td><td class="rank-1">0.125314</td></tr>
+        <tr><td>2</td><td>National Standard Industry</td><td>0.844530</td><td>Patent</td><td>0.602925</td><td>Patent</td><td>0.080030</td></tr>
+        <tr><td>3</td><td>Patent</td><td>0.631675</td><td>National Standard Industry</td><td>0.560625</td><td>Tripartite scoring</td><td>0.071085</td></tr>
+        <tr><td>4</td><td>Innovation and Technology Scores</td><td>0.551320</td><td>Innovation and Technology Scores</td><td>0.370668</td><td>National Standard Industry</td><td>0.063040</td></tr>
+        <tr><td>5</td><td>Establishment period</td><td>0.462367</td><td>Software Copyright</td><td>0.343364</td><td>Establishment period</td><td>0.047699</td></tr>
+        <tr><td>6</td><td>Trademark</td><td>0.443167</td><td>Establishment period</td><td>0.291932</td><td>Software Copyright</td><td>0.037440</td></tr>
+        <tr><td>7</td><td>Tripartite scoring</td><td>0.431025</td><td>Scale</td><td>0.251837</td><td>Scale</td><td>0.031746</td></tr>
+        <tr><td>8</td><td>Scale</td><td>0.416599</td><td>Paid-up capital</td><td>0.226597</td><td>Innovation and Technology Scores</td><td>0.029942</td></tr>
+        <tr><td>9</td><td>Paid-up capital</td><td>0.414569</td><td>Official website</td><td>0.212967</td><td>Paid-up capital</td><td>0.026295</td></tr>
+        <tr><td>10</td><td>Software Copyright</td><td>0.389661</td><td>Tripartite scoring</td><td>0.204337</td><td>Trademark</td><td>0.012235</td></tr>
+        <tr><td>11</td><td>Official website</td><td>0.281880</td><td>Trademark</td><td>0.198182</td><td>Province</td><td>0.011960</td></tr>
+        <tr><td>12</td><td>Taxpayer qualifications</td><td>0.253922</td><td>Province</td><td>0.109175</td><td>Administrative penalties</td><td>0.011958</td></tr>
+        <tr><td>13</td><td>Province</td><td>0.243387</td><td>Administrative penalties</td><td>0.097702</td><td>Official website</td><td>0.011383</td></tr>
+        <tr><td>14</td><td>Administrative penalties</td><td>0.181421</td><td>Taxpayer qualifications</td><td>0.071510</td><td>Business years</td><td>0.008608</td></tr>
+        <tr><td>15</td><td>Business years</td><td>0.081356</td><td>Business years</td><td>0.037474</td><td>Taxpayer qualifications</td><td>0.003407</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight blue">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text"><strong>Hallazgo clave:</strong> "Registered capital" ocupa el puesto #1 en los tres modelos (XGBoost, LightGBM y RF), confirmando que es la feature con mayor poder discriminatorio en la evaluación del riesgo crediticio. "Business years" y "Taxpayer qualifications" obtienen los rankings más bajos consistentemente, indicando menor relevancia relativa.</div>
+  </div>
+
+  <!-- TABLA 4 — LIME -->
+  <h3>Tabla 4 — Ranking de Features por LIME (valores exactos del paper)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Feature (XGBoost)</th>
+          <th>LIME XGBoost</th>
+          <th>Feature (LightGBM)</th>
+          <th>LIME LightGBM</th>
+          <th>Feature (RF)</th>
+          <th>LIME RF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="rank-1">1</td><td>Registered capital</td><td class="rank-1">0.078567</td><td>Registered capital</td><td class="rank-1">0.087474</td><td>Registered capital</td><td class="rank-1">0.044437</td></tr>
+        <tr><td>2</td><td>Innovation and Technology Scores</td><td>0.045394</td><td>Innovation and Technology Scores</td><td>0.050877</td><td>Software Copyright</td><td>0.034238</td></tr>
+        <tr><td>3</td><td>Software Copyright</td><td>0.045347</td><td>Software Copyright</td><td>0.032021</td><td>Patent</td><td>0.029114</td></tr>
+        <tr><td>4</td><td>Patent</td><td>0.044014</td><td>Patent</td><td>0.025834</td><td>Tripartite scoring</td><td>0.020657</td></tr>
+        <tr><td>5</td><td>Scale</td><td>0.023604</td><td>National Standard Industry</td><td>0.014257</td><td>Innovation and Technology Scores</td><td>0.017056</td></tr>
+        <tr><td>6</td><td>Tripartite scoring</td><td>0.022678</td><td>Paid-up capital</td><td>0.013948</td><td>Establishment period</td><td>0.010006</td></tr>
+        <tr><td>7</td><td>Establishment period</td><td>0.017841</td><td>Establishment period</td><td>0.012223</td><td>National Standard Industry</td><td>0.005938</td></tr>
+        <tr><td>8</td><td>Trademark</td><td>0.016995</td><td>Tripartite scoring</td><td>0.009376</td><td>Trademark</td><td>0.005342</td></tr>
+        <tr><td>9</td><td>National Standard Industry</td><td>0.016262</td><td>Scale</td><td>0.009260</td><td>Scale</td><td>0.005320</td></tr>
+        <tr><td>10</td><td>Paid-up capital</td><td>0.014595</td><td>Administrative penalties</td><td>0.007856</td><td>Administrative penalties</td><td>0.004280</td></tr>
+        <tr><td>11</td><td>Province</td><td>0.007280</td><td>Trademark</td><td>0.007457</td><td>Paid-up capital</td><td>0.003802</td></tr>
+        <tr><td>12</td><td>Official website</td><td>0.006976</td><td>Province</td><td>0.002305</td><td>Province</td><td>0.001796</td></tr>
+        <tr><td>13</td><td>Taxpayer qualifications</td><td>0.003023</td><td>Official website</td><td>0.001741</td><td>Official website</td><td>0.000698</td></tr>
+        <tr><td>14</td><td>Administrative penalties</td><td>0.000648</td><td>Taxpayer qualifications</td><td>0.001563</td><td>Taxpayer qualifications</td><td>0.000641</td></tr>
+        <tr><td>15</td><td>Business years</td><td>0.000149</td><td>Business years</td><td>0.000639</td><td>Business years</td><td>0.000112</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight orange">
+    <div class="insight-icon">⚠️</div>
+    <div class="insight-text"><strong>Discrepancia SHAP vs LIME:</strong> Los valores de importancia de LIME son significativamente menores que los de SHAP. Esto ocurre principalmente porque LIME es un modelo local que aproxima el modelo original complejo usando un modelo lineal simplificado. Por esto se calculan los pesos y se usa el composite score C = S + L para la selección final.</div>
+  </div>
+
+  <!-- TABLA 5 — COMPOSITE -->
+  <h3>Tabla 5 — Composite Score Final (weighted_COMP)</h3>
+
+  <!-- Visual bars -->
+  <div class="card">
+    <div style="margin-bottom:16px;">
+      <div class="feat-row"><div class="feat-name">Registered capital</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:100%;background:#ffa657;"></div></div><div class="feat-val">5.834000 🥇</div></div>
+      <div class="feat-row"><div class="feat-name">Patent</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:46.4%;background:#58a6ff;"></div></div><div class="feat-val">2.708405</div></div>
+      <div class="feat-row"><div class="feat-name">Software Copyright</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:39.1%;background:#58a6ff;"></div></div><div class="feat-val">2.282456</div></div>
+      <div class="feat-row"><div class="feat-name">Innov. & Tech. Scores</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:37.4%;background:#58a6ff;"></div></div><div class="feat-val">2.180662</div></div>
+      <div class="feat-row"><div class="feat-name">National Std Industry</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:29.4%;background:#3fb950;"></div></div><div class="feat-val">1.716226</div></div>
+      <div class="feat-row"><div class="feat-name">Tripartite scoring</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:28.8%;background:#3fb950;"></div></div><div class="feat-val">1.681475</div></div>
+      <div class="feat-row"><div class="feat-name">Establishment period</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:22.2%;background:#3fb950;"></div></div><div class="feat-val">1.295706</div></div>
+      <div class="feat-row"><div class="feat-name">Scale</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:18.1%;background:#d2a8ff;"></div></div><div class="feat-val">1.054599</div></div>
+      <div class="feat-row"><div class="feat-name">Paid-up capital</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:15.5%;background:#d2a8ff;"></div></div><div class="feat-val">0.905581</div></div>
+      <div class="feat-row"><div class="feat-name">Trademark</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:13.5%;background:#d2a8ff;"></div></div><div class="feat-val">0.790605</div></div>
+      <div class="feat-row"><div class="feat-name">Official website</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:6.7%;background:#8b949e;"></div></div><div class="feat-val">0.391056</div></div>
+      <div class="feat-row"><div class="feat-name">Province</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:6.1%;background:#8b949e;"></div></div><div class="feat-val">0.355480</div></div>
+      <div class="feat-row"><div class="feat-name">Admin. penalties</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:5.9%;background:#8b949e;"></div></div><div class="feat-val">0.342384</div></div>
+      <div class="feat-row"><div class="feat-name">Taxpayer qualif.</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:3.3%;background:#8b949e;"></div></div><div class="feat-val">0.190590</div></div>
+      <div class="feat-row"><div class="feat-name">Business years</div><div class="feat-bar-wrap"><div class="feat-bar" style="width:0.7%;background:#8b949e;"></div></div><div class="feat-val">0.041426</div></div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);">🟠 Naranja = feature #1 dominante · 🔵 Azul = top 2-4 · 🟢 Verde = top 5-7 · 🟣 Morado = top 8-10 · ⚫ Gris = baja importancia</p>
+  </div>
+</section>
+
+<!-- 2.6 PESOS -->
+<section id="s6">
+  <h2>2.6 Estrategia de Ajuste de Pesos — Loss Preference</h2>
+  <div class="section-subtitle">Por qué no todos los errores cuestan lo mismo y cómo el modelo lo incorpora</div>
+
+  <div class="card">
+    <h3>Justificación del Ratio de Costos 1:10</h3>
+    <p>En el proceso de evaluación crediticia ocurren dos tipos de errores de clasificación:</p>
+    <ul style="margin:10px 0 10px 20px;font-size:14px;line-height:2;">
+      <li><strong>Falso Positivo (FP):</strong> Clasificar una empresa de bajo riesgo como de alto riesgo — consecuencias relativamente bajas (inspección innecesaria).</li>
+      <li><strong>Falso Negativo (FN):</strong> Clasificar una empresa de alto riesgo como de bajo riesgo — consecuencias graves: contrabando, evasión fiscal y otras violaciones sin detectar.</li>
+    </ul>
+    <p>Investigaciones previas han indicado que en préstamos offline tradicionales, las pérdidas del segundo tipo de error pueden ser <strong>5 a 20 veces</strong> mayores que las del primer tipo. Por tanto, el paper establece el ratio de costos en <strong>1:10</strong>.</p>
+
+    <div class="formula-box">
+      <div class="formula-label">Fórmula 6 — Índice de Costo de Mala Clasificación</div>
+      Cost = FPR + 10 × FNR
+      <br><br>
+      Fórmula 7:<br>
+      FPR = FP / (FP + TN)    ←  Tasa de falsos positivos<br>
+      FNR = FN / (FN + TP)    ←  Tasa de falsos negativos
+      <br><br>
+      Interpretación: Cuanto menor sea el valor de Cost, mejor es la efectividad de clasificación global del modelo.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Mecanismo de Gradient Sampling</h3>
+    <h4>Paso 1 — Gradient Sampling</h4>
+    <p>En cada iteración, se calcula el gradiente de error cuadrático de cada muestra:</p>
+    <div class="formula-box">
+      <div class="formula-label">Gradiente por muestra</div>
+      gᵢ = (pᵢ - yᵢ)²
+      <br>donde pᵢ = probabilidad predicha, yᵢ = etiqueta real
+    </div>
+    <p>Se selecciona el <strong>top 10%</strong> de muestras con mayor gradiente (las más difíciles de clasificar), más el <strong>20% aleatorio</strong> del resto, para formar el subconjunto de entrenamiento de la siguiente iteración.</p>
+
+    <h4>Paso 2 — Weight Adjustment</h4>
+    <div class="formula-box">
+      <div class="formula-label">Ajuste de peso para muestras de alto riesgo</div>
+      w₁ = 5 × w₀
+      <br>donde w₁ = peso de muestra de alto riesgo, w₀ = peso base
+    </div>
+    <p>Los pesos se ajustan dinámicamente en cada iteración según la categoría de la muestra y la magnitud del gradiente, forzando al modelo a focalizarse en las muestras de alto riesgo difíciles de identificar.</p>
+    <div class="insight red">
+      <div class="insight-icon">⚠️</div>
+      <div class="insight-text"><strong>Trade-off identificado:</strong> Este ajuste mejora significativamente la detección de empresas de alto riesgo (reduce FNR), pero a costa de reducir la accuracy general (de 0.977 a 0.879). Por eso se aplica Bagging en la siguiente etapa.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2.7 BAGGING -->
+<section id="s7">
+  <h2>2.7 Framework Bagging + LightGBM</h2>
+  <div class="section-subtitle">Cómo Bagging complementa a LightGBM para recuperar accuracy sin sacrificar sensibilidad</div>
+
+  <div class="card">
+    <h3>¿Por qué Boosting solo no es suficiente?</h3>
+    <p>LightGBM es un framework de gradient boosting eficiente que construye árboles de decisión paso a paso usando descenso de gradiente. En cada paso corrige los errores del modelo anterior, reduciendo el sesgo (bias) progresivamente mediante un proceso aditivo. Sin embargo, dado que Boosting sigue una <strong>estrategia de aprendizaje serial</strong> y se enfoca principalmente en reducir el sesgo, es menos efectivo controlando la varianza. Con el ajuste de pesos por preferencias de pérdida, la varianza se incrementa y la accuracy cae.</p>
+
+    <h3>Cómo Bagging complementa</h3>
+    <p>Bagging crea múltiples subconjuntos de entrenamiento mediante resampling (bootstrap) y combina las predicciones de múltiples modelos base mediante un mecanismo de votación. Este enfoque reduce efectivamente la varianza y disminuye la probabilidad de error de clasificación. Al combinar las fortalezas de ambos métodos, el modelo logra un mejor equilibrio entre reducción de sesgo y control de varianza.</p>
+
+    <h4>Paso 1 — Bootstrap Sampling y Entrenamiento de Clasificadores Base</h4>
+    <p>Basándose en los parámetros óptimos obtenidos mediante grid search, se crean múltiples clasificadores base de LightGBM. Cada clasificador base se entrena sobre un subconjunto bootstrap (muestreo aleatorio <em>con reemplazo</em>) del training set, asegurando diversidad en los datos de entrenamiento de cada clasificador.</p>
+
+    <h4>Paso 2 — Voting Integration (Integración por Votación)</h4>
+    <p>Todos los clasificadores base realizan predicciones sobre el test set, y los resultados se combinan mediante votación mayoritaria.</p>
+
+    <div class="formula-box">
+      <div class="formula-label">Fórmula 5 — Predicción Final del Ensemble Bagging</div>
+      H(x) = sign( Σₜ₌₁ᵀ hₜ(x) )
+      <br><br>
+      Donde:<br>
+      — T = número de clasificadores base<br>
+      — hₜ(x) ∈ {0, 1} = predicción del clasificador t<br>
+      — Si Σhₜ(x) ≥ T/2  →  clasificación = 1 (alto riesgo)<br>
+      — Si Σhₜ(x) &lt; T/2  →  clasificación = 0 (bajo riesgo)
+    </div>
+  </div>
+</section>
+
+<!-- 2.8 FEATURE SUBSET -->
+<section id="s8">
+  <h2>2.8 Selección del Feature Subset Óptimo</h2>
+  <div class="section-subtitle">Tabla 6 del paper — comparación de rendimiento por número de features</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature Set</th>
+          <th>Accuracy</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1-Score</th>
+          <th>AUC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Full Feature Set (15)</td><td>0.972</td><td>0.961</td><td>0.912</td><td>0.936</td><td>0.973</td></tr>
+        <tr><td>14 Feature Subsets</td><td>0.968</td><td>0.947</td><td>0.912</td><td>0.929</td><td>0.973</td></tr>
+        <tr class="highlight-row"><td>⭐ 13 Feature Subsets (ÓPTIMO)</td><td>0.973</td><td>0.976</td><td>0.904</td><td>0.939</td><td>0.973</td></tr>
+        <tr><td>12 Feature Subsets</td><td>0.972</td><td>0.969</td><td>0.904</td><td>0.935</td><td>0.972</td></tr>
+        <tr><td>11 Feature Subsets</td><td>0.968</td><td>0.961</td><td>0.897</td><td>0.928</td><td>0.972</td></tr>
+        <tr><td>10 Feature Subsets</td><td>0.967</td><td>0.953</td><td>0.897</td><td>0.924</td><td>0.972</td></tr>
+        <tr><td>9 Feature Subsets</td><td>0.960</td><td>0.918</td><td>0.904</td><td>0.911</td><td>0.973</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight green">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-text"><strong>Punto óptimo: 13 features.</strong> Con 13 features el modelo logra accuracy de 0.973, precision de 0.976 y F1 de 0.939 — mejores que el set completo de 15 features. La feature excluida corresponde al ranking 14 y 15 del composite score (business years y taxpayer qualifications). La reducción progresiva de features deteriora el rendimiento, confirmando que las 13 features seleccionadas ofrecen el mejor trade-off entre poder predictivo e interpretabilidad, evitando redundancia.</div>
+  </div>
+</section>
+
+<!-- 2.9 RESULTADOS -->
+<section id="s9">
+  <h2>2.9 Resultados Comparativos Finales</h2>
+  <div class="section-subtitle">Tablas 7 y 8 del paper — comparación de las tres versiones del modelo</div>
+
+  <div class="side-by-side">
+    <!-- Dataset terceros -->
+    <div class="sbs-card">
+      <h4>📊 Dataset de Terceros (Tabla 7)</h4>
+      <div class="table-wrap" style="margin:10px 0;">
+        <table>
+          <thead>
+            <tr><th>Modelo</th><th>TP</th><th>TN</th><th>FP</th><th>FN</th><th>FPR</th><th>FNR</th><th>Acc.</th><th>Cost</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>LightGBM base</td><td>124</td><td>463</td><td>2</td><td>12</td><td>0.004</td><td>0.088</td><td>0.977</td><td style="color:var(--accent3);">0.884</td></tr>
+            <tr><td>+ Weight Adj.</td><td>139</td><td>389</td><td>69</td><td>4</td><td>0.151</td><td class="best-val">0.028</td><td>0.879</td><td>0.431</td></tr>
+            <tr class="highlight-row"><td>⭐ Este estudio</td><td>137</td><td>452</td><td>6</td><td>6</td><td>0.013</td><td>0.042</td><td class="best-val">0.980</td><td class="best-val">0.433</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="cost-bar-wrap">
+          <div class="cost-label">Cost LightGBM base: 0.884</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:100%;background:#f78166;">0.884</div></div>
+        </div>
+        <div class="cost-bar-wrap" style="margin-top:6px;">
+          <div class="cost-label">Cost + Weight Adjustment: 0.431</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:48.8%;background:#ffa657;">0.431</div></div>
+        </div>
+        <div class="cost-bar-wrap" style="margin-top:6px;">
+          <div class="cost-label">Cost Este estudio (Bagging): 0.433</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:49%;background:#3fb950;">0.433</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dataset oficial -->
+    <div class="sbs-card">
+      <h4>📊 Dataset Oficial — Aduanas (Tabla 8)</h4>
+      <div class="table-wrap" style="margin:10px 0;">
+        <table>
+          <thead>
+            <tr><th>Modelo</th><th>TP</th><th>TN</th><th>FP</th><th>FN</th><th>FPR</th><th>FNR</th><th>Acc.</th><th>Cost</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>LightGBM base</td><td>4,940</td><td>157,663</td><td>5,081</td><td>6,236</td><td>0.031</td><td>0.558</td><td>0.856</td><td style="color:var(--accent3);">5.611</td></tr>
+            <tr><td>+ Weight Adj.</td><td>5,197</td><td>154,762</td><td>9,137</td><td>4,824</td><td>0.056</td><td class="best-val">0.481</td><td>0.822</td><td>4.866</td></tr>
+            <tr class="highlight-row"><td>⭐ Este estudio</td><td>5,088</td><td>156,731</td><td>7,168</td><td>4,933</td><td>0.044</td><td>0.492</td><td class="best-val">0.848</td><td>4.964</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="cost-bar-wrap">
+          <div class="cost-label">Cost LightGBM base: 5.611</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:100%;background:#f78166;">5.611</div></div>
+        </div>
+        <div class="cost-bar-wrap" style="margin-top:6px;">
+          <div class="cost-label">Cost + Weight Adjustment: 4.866</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:86.7%;background:#ffa657;">4.866</div></div>
+        </div>
+        <div class="cost-bar-wrap" style="margin-top:6px;">
+          <div class="cost-label">Cost Este estudio (Bagging): 4.964</div>
+          <div class="cost-bar-outer"><div class="cost-bar-fill" style="width:88.5%;background:#3fb950;">4.964</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>Análisis del Trade-off: Accuracy vs Costo de Mala Clasificación</h3>
+    <p><strong>Dataset de terceros:</strong> El ajuste de pesos reduce la accuracy de 0.977 a 0.879, pero el costo de mala clasificación cae de 0.884 a 0.431 (reducción del 51%). Al integrar Bagging, la accuracy no solo se recupera sino que mejora ligeramente a 0.980, mientras el costo se mantiene bajo (0.433). Resultado: el modelo propuesto logra el mejor balance entre ambos criterios.</p>
+    <p><strong>Dataset oficial:</strong> El modelo base LightGBM alcanza accuracy de 0.856 con costo 5.611. El ajuste de pesos reduce el costo a 4.866 pero baja la accuracy a 0.822. Con Bagging, la accuracy sube a 0.848, mientras el costo (4.964) es significativamente menor que el modelo base (5.611), aunque ligeramente mayor que el ajuste de pesos solo (4.866). Bagging mitiga la pérdida de accuracy manteniendo un costo sustancialmente más bajo que el modelo tradicional.</p>
+  </div>
+</section>
+
+<!-- 2.10 INTERPRETABILIDAD -->
+<section id="s10">
+  <h2>2.10 Análisis de Interpretabilidad</h2>
+  <div class="section-subtitle">SHAP Beeswarm global + LIME individual — hallazgos del paper</div>
+
+  <div class="card">
+    <h3>SHAP Beeswarm Plot — Descripción e Interpretación</h3>
+    <p>El Beeswarm plot del paper presenta la distribución de valores SHAP para cada feature. El <strong>eje X</strong> representa la distribución de valores SHAP (impacto en el output del modelo). Cada punto representa una muestra, y los <strong>colores</strong> van de azul (valores bajos de la feature) a rojo (valores altos).</p>
+    <ul style="margin:10px 0 10px 20px;font-size:14px;line-height:2;">
+      <li>Un <strong>valor SHAP positivo</strong> indica que la feature lleva al modelo a predecir "alto riesgo".</li>
+      <li>Un <strong>valor SHAP negativo</strong> indica que la feature empuja hacia una predicción de "bajo riesgo".</li>
+    </ul>
+
+    <h4>Hallazgos Específicos del Paper</h4>
+    <div class="insight blue">
+      <div class="insight-icon">💼</div>
+      <div class="insight-text"><strong>Registered capital (#1):</strong> Es la feature que más significativamente afecta las predicciones del modelo. Empresas con alto capital registrado reducen significativamente la probabilidad de ser predichas como alto riesgo, mientras que bajo capital registrado se asocia fuertemente con alto riesgo. En general, un mayor capital registrado implica condiciones operativas más estables y menor riesgo crediticio relativo.</div>
+    </div>
+    <div class="insight green">
+      <div class="insight-icon">🔬</div>
+      <div class="insight-text"><strong>Patents y Software Copyright:</strong> Un mayor número de patentes y derechos de autor de software también reduce la probabilidad de predicción de alto riesgo, reflejando la capacidad de innovación y sostenibilidad de largo plazo de la empresa.</div>
+    </div>
+    <div class="insight orange">
+      <div class="insight-icon">📍</div>
+      <div class="insight-text"><strong>Province y Administrative penalties (baja importancia):</strong> Estas features tienen menor importancia, con distribución de valores SHAP más concentrada y menor impacto. Esto puede deberse a que las diferencias de crédito entre regiones son menores, o que las sanciones administrativas no reflejan directamente la estabilidad operativa actual.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>LIME — Ejemplo Individual del Paper</h3>
+    <p>El paper aplica LIME a una muestra específica (Figura 5). El modelo predice la empresa como <strong>bajo riesgo (Category 1)</strong> con <strong>100% de confianza</strong>.</p>
+
+    <div class="card-grid">
+      <div class="card-sm">
+        <div class="label">Predicción del modelo</div>
+        <div class="value" style="color:#3fb950;">Bajo Riesgo</div>
+        <div class="sub">Confianza: 100%</div>
+      </div>
+      <div class="card-sm">
+        <div class="label">Driver positivo #1</div>
+        <div class="value" style="font-size:16px;color:#ffa657;">Capital Registrado</div>
+        <div class="sub">16.7234 millones de yuan (660.91 &lt; Registered)</div>
+      </div>
+      <div class="card-sm">
+        <div class="label">Driver positivo #2</div>
+        <div class="value" style="font-size:16px;color:#ffa657;">Innovation Score</div>
+        <div class="sub">80.87 puntos (80.66 &lt; Innovation...)</div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px;font-size:14px;">El análisis LIME indica que la sólida fortaleza financiera (capital registrado elevado) y las capacidades tecnológicas (puntaje de innovación alto) son los factores clave que respaldan la calificación de bajo riesgo para esta empresa específica.</p>
+    <p style="font-size:13px;color:var(--text-muted);">Otros valores de la empresa en el ejemplo: Software Copyright = 0, Patent = 0, National Standard Industry = 5, Paid-up capital = 882.02, Establishment period = 15 años, Trademark = 15, Administrative penalties = 1, Scale = 1.</p>
+  </div>
+</section>
+
+<!-- 2.11 CONTRIBUCIONES Y LIMITACIONES -->
+<section id="s11">
+  <h2>2.11 Contribuciones Teóricas y Limitaciones</h2>
+
+  <h3>Contribuciones Teóricas</h3>
+  <div class="contrib-grid">
+    <div class="contrib-card">
+      <div class="num">01</div>
+      <p><strong>Framework multi-dimensional SHAP + LIME:</strong> Integración de ambos métodos en un sistema unificado que combina importancia global de features con explicaciones locales por instancia, habilitando identificación precisa de factores críticos de riesgo crediticio con rutas de interpretación transparentes y trazables.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="num">02</div>
+      <p><strong>Modelo de evaluación dinámico basado en pérdidas (Loss Preference + Bagging):</strong> LightGBM con ajuste dinámico de pesos para muestras de alto riesgo, complementado con Bagging que restaura la accuracy mientras mantiene bajo el costo de mala clasificación. Equilibrio práctico entre accuracy y sensibilidad al costo.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="num">03</div>
+      <p><strong>Validación dual en dos datasets independientes:</strong> Terceros (3,005 empresas) y oficial de aduanas (579,733 empresas), asegurando evaluación empírica más completa y confiable que la validación con un solo dataset de los estudios anteriores.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px;">Limitaciones del Paper</h3>
+  <ul class="limit-dark">
+    <li><strong>Solo datos estructurados:</strong> El análisis se basa principalmente en datos estructurados, sin incorporar fuentes no estructuradas como divulgaciones textuales, registros de transacciones, o dinámicas de mercado, que también podrían proporcionar información valiosa sobre el riesgo empresarial.</li>
+    <li><strong>Generalización limitada a comercio exterior chino:</strong> La evaluación del modelo se basa en datasets específicos de empresas de comercio exterior chino, lo que puede limitar la generalización de los resultados a otras industrias o contextos internacionales.</li>
+    <li><strong>Explicaciones SHAP/LIME difíciles para stakeholders no técnicos:</strong> Aunque el framework propuesto mejora la interpretabilidad mediante SHAP y LIME, las explicaciones pueden seguir siendo difíciles de comprender y aplicar en la práctica para stakeholders no técnicos.</li>
+  </ul>
+
+  <div class="insight blue">
+    <div class="insight-icon">🔮</div>
+    <div class="insight-text"><strong>Líneas de investigación futura propuestas por los autores:</strong> (1) Integrar datos no estructurados y en tiempo real; (2) Expandir la validación empírica a datasets más amplios y comparaciones cross-industry; (3) Desarrollar herramientas de interpretabilidad más amigables para usuarios no técnicos que cierren la brecha entre outputs técnicos y toma de decisiones gerencial.</div>
+  </div>
+</section>
+
+<!-- ================================================ -->
+<!-- SECCIÓN 3: RESUMEN EJECUTIVO (MARKETING)         -->
+<!-- ================================================ -->
+
+<hr class="section-divider" id="marketing">
+
+<div class="mkt-section">
+  <div class="mkt-header">
+    <h1>📊 Resumen Ejecutivo — Sin Tecnicismos</h1>
+    <p>Esta sección explica el paper en lenguaje de negocio, sin fórmulas matemáticas. Ideal para contexto ejecutivo, presentaciones y pitch.</p>
+  </div>
+
+  <h2>SECCIÓN 3 — Resumen para Contexto de Negocio y Marketing</h2>
+
+  <!-- 3.1 -->
+  <div class="mkt-card">
+    <span class="q-num">3.1</span>
+    <h3>¿De qué trata este paper en una frase?</h3>
+    <p>Investigadores chinos desarrollaron un sistema de inteligencia artificial que identifica con alta precisión qué empresas exportadoras e importadoras tienen mayor riesgo de cometer fraude, contrabando o evasión fiscal — y además explica <em>por qué</em> las clasifica así, en términos comprensibles para los reguladores.</p>
+  </div>
+
+  <!-- 3.2 -->
+  <div class="mkt-card">
+    <span class="q-num">3.2</span>
+    <h3>¿Cuál era el problema real?</h3>
+    <p>A mediados de 2023, más de <strong>540,000 empresas</strong> estaban activas en el comercio exterior chino. Los inspectores de aduanas debían revisar manualmente cuáles cumplían la ley y cuáles no — un proceso extremadamente lento, costoso y sin criterios claros ni objetivos.</p>
+    <div class="analogy-box">
+      <strong>Analogía:</strong> Imagina que en un aeropuerto con 540,000 pasajeros diarios, los agentes de seguridad tuvieran que decidir a quién revisar a ojo, sin rayos X ni base de datos. El riesgo de dejar pasar algo peligroso es altísimo, y a la vez se molesta innecesariamente a viajeros inocentes.
+    </div>
+  </div>
+
+  <!-- 3.3 -->
+  <div class="mkt-card">
+    <span class="q-num">3.3</span>
+    <h3>¿Qué construyeron?</h3>
+    <p>Un sistema de IA que combina tres tecnologías:</p>
+    <ul style="margin:10px 0 10px 20px;font-size:14px;line-height:2;color:var(--mkt-text);">
+      <li><strong>Un motor de detección inteligente (LightGBM):</strong> aprende a distinguir empresas riesgosas de las confiables, igual que un filtro de spam que aprende a reconocer correos maliciosos.</li>
+      <li><strong>Un ajuste de prioridades:</strong> el sistema sabe que dejar pasar a una empresa riesgosa (sin detectarla) es 10 veces más dañino que marcar incorrectamente a una empresa segura. Por eso prioriza no perderse los casos peligrosos.</li>
+      <li><strong>Un sistema de "segunda opinión" (Bagging):</strong> múltiples versiones del modelo votan la decisión final, reduciendo errores — similar a consultar varios médicos antes de un diagnóstico importante.</li>
+    </ul>
+    <p>Y además, el sistema puede <strong>explicar</strong> cada decisión: "Esta empresa se clasifica como de bajo riesgo porque tiene un capital registrado alto y muchas patentes."</p>
+  </div>
+
+  <!-- 3.4 -->
+  <div class="mkt-card">
+    <span class="q-num">3.4</span>
+    <h3>¿Por qué importa el costo de equivocarse?</h3>
+    <p>No todos los errores tienen el mismo impacto. En este contexto:</p>
+    <div class="mkt-stat-row">
+      <div class="mkt-stat">
+        <div class="big" style="color:#1a56db;">1×</div>
+        <div class="sub">Costo de marcar como riesgosa a una empresa segura</div>
+      </div>
+      <div class="mkt-stat">
+        <div class="big" style="color:#c81e1e;">10×</div>
+        <div class="sub">Costo de no detectar a una empresa realmente riesgosa</div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <strong>Analogía:</strong> Si un banco aprueba un préstamo a alguien que no puede pagar (no lo detectó como moroso), pierde el dinero prestado más los costos de cobranza. Si le niega el préstamo a alguien solvente, solo pierde esa oportunidad de negocio. El primer error cuesta mucho más. Este paper incorpora esta lógica directamente al modelo de IA.
+    </div>
+  </div>
+
+  <!-- 3.5 -->
+  <div class="mkt-card">
+    <span class="q-num">3.5</span>
+    <h3>¿Qué tan bien funciona?</h3>
+    <p>Los resultados se prueban en dos conjuntos de datos:</p>
+    <div class="mkt-stat-row">
+      <div class="mkt-stat">
+        <div class="big">98%</div>
+        <div class="sub">Precisión general — Dataset de 3,005 empresas</div>
+      </div>
+      <div class="mkt-stat">
+        <div class="big" style="color:#057a55;">51%</div>
+        <div class="sub">Reducción del costo de error (de 0.884 a 0.433)</div>
+      </div>
+      <div class="mkt-stat">
+        <div class="big">85%</div>
+        <div class="sub">Precisión general — Dataset oficial con 579,733 empresas</div>
+      </div>
+      <div class="mkt-stat">
+        <div class="big" style="color:#057a55;">11.5%</div>
+        <div class="sub">Reducción del costo de error en el dataset masivo</div>
+      </div>
+    </div>
+    <p style="font-size:14px;margin-top:10px;">En el dataset de 3,005 empresas: el modelo propuesto logra 98% de precisión general y reduce el costo de errores de clasificación de 0.884 a 0.433. En el dataset masivo de aduanas: aunque la precisión baja ligeramente vs. el modelo tradicional (84.8% vs. 85.6%), el costo de errores se reduce de 5.611 a 4.964 — casi 12% de mejora en el uso eficiente de recursos regulatorios.</p>
+  </div>
+
+  <!-- 3.6 -->
+  <div class="mkt-card">
+    <span class="q-num">3.6</span>
+    <h3>¿Qué factores determinan si una empresa es riesgosa?</h3>
+    <p>El sistema identificó las 5 características más importantes (de mayor a menor relevancia):</p>
+    <ul class="top5-list">
+      <li>
+        <div class="rank-badge">1</div>
+        <div><strong>Capital Registrado:</strong> Cuánto dinero tiene declarado la empresa al constituirse. A mayor capital → menor riesgo. Una empresa con poco capital puede estar subestimando su actividad real para evadir impuestos.</div>
+      </li>
+      <li>
+        <div class="rank-badge">2</div>
+        <div><strong>Patentes:</strong> Número de patentes registradas. Empresas innovadoras tienden a operar dentro del marco legal con mayor frecuencia, y sus activos intangibles son más fáciles de rastrear.</div>
+      </li>
+      <li>
+        <div class="rank-badge">3</div>
+        <div><strong>Derechos de Autor de Software:</strong> Similar a las patentes — indica presencia de activos intelectuales verificables y operación formal.</div>
+      </li>
+      <li>
+        <div class="rank-badge">4</div>
+        <div><strong>Puntaje de Innovación y Tecnología:</strong> Calificación general de innovación de la empresa. Empresas más innovadoras tienden a tener estructuras más formales y cumplimiento regulatorio.</div>
+      </li>
+      <li>
+        <div class="rank-badge">5</div>
+        <div><strong>Clasificación de Industria Nacional:</strong> La industria a la que pertenece la empresa. Algunas industrias tienen perfiles de riesgo inherentemente mayores que otras.</div>
+      </li>
+    </ul>
+    <div class="analogy-box" style="margin-top:12px;">
+      <strong>Analogía para contexto crediticio peruano:</strong> Estos factores son equivalentes a variables como: ingresos declarados, antigüedad laboral, historial crediticio, sector económico y patrimonio. La lógica es la misma: se buscan señales objetivas y verificables que predigan el comportamiento futuro.
+    </div>
+  </div>
+
+  <!-- 3.7 -->
+  <div class="mkt-card">
+    <span class="q-num">3.7</span>
+    <h3>¿Cuáles son los límites de este estudio?</h3>
+    <ul class="limit-list">
+      <li>🇨🇳 <strong>Solo datos de China:</strong> El modelo fue entrenado y validado únicamente con empresas del comercio exterior chino. No está garantizado que funcione igual en otros países o industrias.</li>
+      <li>📋 <strong>Solo datos estructurados:</strong> El sistema analiza datos en formato de tabla (números y categorías), pero no puede leer contratos, correos, noticias ni información de redes sociales que también podrían revelar riesgos.</li>
+      <li>🧑‍💼 <strong>Explicaciones aún complejas para no técnicos:</strong> Aunque SHAP y LIME mejoran la transparencia, los gerentes y reguladores sin formación técnica aún pueden tener dificultad interpretando los outputs del sistema en la práctica.</li>
+    </ul>
+  </div>
+
+  <div class="mkt-card" style="background:linear-gradient(135deg,#ebf5fb,#eafaf1);border-color:#bee3f8;">
+    <h3 style="color:#1a56db;">💡 Relevancia para el Datathon ESAN 2026 — FinanCrece</h3>
+    <p style="font-size:14px;color:var(--mkt-text);">Este paper es directamente aplicable al caso FinanCrece S.A. Las tres innovaciones del paper corresponden exactamente a los criterios del datathon:</p>
+    <ul style="margin:10px 0 10px 20px;font-size:14px;line-height:2.2;color:var(--mkt-text);">
+      <li>✅ <strong>SHAP + LIME →</strong> Criterio de Interpretabilidad (25 pts) — explicar el modelo al jurado y a FinanCrece</li>
+      <li>✅ <strong>Loss Preference (costo 1:10) →</strong> Criterio de Impacto en Negocio (25 pts) — cuantificar pérdidas por mora no detectada</li>
+      <li>✅ <strong>LightGBM + Bagging →</strong> Criterio de Calidad del Modelo (30 pts) — AUC, KS, Gini, F1 superiores</li>
+      <li>✅ <strong>3 bandas de riesgo →</strong> Criterio de Política Crediticia (dentro de Impacto en Negocio)</li>
+    </ul>
+    <p style="font-size:13px;color:var(--mkt-muted);">DOI para citar: https://doi.org/10.3390/info16100831 | Publicado: 26 septiembre 2025 | Scopus-indexado: MDPI Information</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id], div[id="marketing"]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 80;
+      if (window.pageYOffset >= sectionTop) current = section.id;
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      if (link.getAttribute('href') === '#' + current) link.style.color = 'var(--accent)';
+    });
+  });
+</script>
+
+</body>
+</html>
